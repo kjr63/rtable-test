@@ -44,8 +44,8 @@ const Table = ({ columns, data }) => {
 
   return (
 	<div>
-	<caption className="react-table__caption">MaterialUI Table</caption>
     <MaUTable {...getTableProps()}>
+		<caption className="react-table__caption">MaterialUI Table</caption>
       <TableHead>
         {headerGroups.map(headerGroup => (
           <TableRow {...headerGroup.getHeaderGroupProps()}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useTable, useFilters, useGlobalFilter } from "react-table";
 
+
 const data = [
   { firstName: "jane", lastName: "doe", age: 20 },
   { firstName: "john", lastName: "smith", age: 21 }
@@ -20,7 +21,7 @@ const columns = [
         accessor: "lastName",
         filter: "text"
       }
-    ]
+    ],
   },
   {
     Header: "Other Info",
@@ -34,7 +35,7 @@ const columns = [
   }
 ];
 
-const DefaultColumnFilter = ({
+/* const DefaultColumnFilter = ({
   column: { filterValue, preFilteredRows, setFilter }
 }) => {
   const count = preFilteredRows.length;
@@ -48,9 +49,27 @@ const DefaultColumnFilter = ({
       placeholder={`Search ${count} records...`}
     />
   );
+}; */
+
+const DefaultColumnFilter = ({
+  column: { filterValue, preFilteredRows, setFilter }
+}) => {
+  const count = preFilteredRows.length;
+
+  return (
+    <input
+      value={filterValue || ""}
+      onChange={e => {
+		let val = e.target.value;
+		if (val == "ni") val = "ja";
+        setFilter(val || undefined);
+      }}
+      placeholder={`Search ${count} records...`}
+    />
+  );
 };
 
-const GlobalFilter = ({
+/* const GlobalFilter = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter
@@ -71,6 +90,35 @@ const GlobalFilter = ({
         }}
       />
     </span>
+  );
+}; */
+
+const GlobalFilter = ({
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter
+}) => {
+  const count = preGlobalFilteredRows && preGlobalFilteredRows.length;
+
+  return (
+  <div>
+    <span>
+      Search:{" "}
+      <input
+        value={globalFilter || ""}
+        onChange={e => {
+          setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        }}
+        placeholder={`${count} records...`}
+        style={{
+          border: "0"
+        }}
+      />
+	  <button id="butt" onClick={e => {setGlobalFilter("20");}}>
+		Filter Global
+	  </button>
+    </span>
+	</div>
   );
 };
 
@@ -113,15 +161,25 @@ const Table = ({ columns, data }) => {
       columns,
       data,
       defaultColumn,
-      filterTypes
+      filterTypes,
+	  initialState: { pageIndex: 0, hiddenColumns: ["age"] } // Array<ColumnId: String>
     },
     useFilters,
     useGlobalFilter
   );
 
   return (
+  <div>
+
     <table {...getTableProps()}>
-		<caption className="react-table__caption">Filter Table</caption>
+		<caption className="react-table__caption">
+			<div>Filter Table</div>
+			<GlobalFilter
+			preGlobalFilteredRows={preGlobalFilteredRows}
+			globalFilter={state.globalFilter}
+			setGlobalFilter={setGlobalFilter}
+			/>				
+		</caption>	
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -140,11 +198,11 @@ const Table = ({ columns, data }) => {
               textAlign: "left"
             }}
           >
-            <GlobalFilter
+		  {/*             <GlobalFilter
               preGlobalFilteredRows={preGlobalFilteredRows}
               globalFilter={state.globalFilter}
               setGlobalFilter={setGlobalFilter}
-            />
+		  /> */}
           </th>
         </tr>
       </thead>
@@ -161,6 +219,7 @@ const Table = ({ columns, data }) => {
         })}
       </tbody>
     </table>
+	</div>
   );
 };
 
