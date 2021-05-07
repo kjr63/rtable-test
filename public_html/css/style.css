@@ -94,6 +94,9 @@ table, th, td {
   visibility: visible;
   opacity: 1; }
 
+.think-react-ex {
+  transform: skewY(20deg); }
+
 .template {
   background-color: #a79e84;
   transform: skewY(-20deg); }
